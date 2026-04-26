@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Karena-MLLB | ملكة الميدان</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #c9962a;
+    --gold-light: #f0c040;
+    --gold-bright: #ffe066;
+    --blue-deep: #0a1628;
+    --blue-royal: #1a3060;
+    --blue-mid: #2255aa;
+    --crimson: #8b1a1a;
+    --cream: #f5e6c8;
+    --white: #fff8ee;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--blue-deep);
+    color: var(--cream);
+    font-family: 'Amiri', serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    width: 18px; height: 18px;
+    border: 2px solid var(--gold-light);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9999;
+    transition: transform 0.1s, background 0.2s;
+    mix-blend-mode: screen;
+  }
+  .cursor-trail {
+    width: 6px; height: 6px;
+    background: var(--gold-bright);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9998;
+    transition: transform 0.25s ease, opacity 0.3s;
+    opacity: 0.7;
+  }
+
+  /* ===== PARTICLES ===== */
+  #particles {
+    position: fixed; inset: 0;
+    pointer-events: none; z-index: 0;
+    overflow: hidden;
+  }
+  .particle {
+    position: absolute;
+    border-radius: 50%;
+    animation: floatParticle linear infinite;
+    opacity: 0;
+  }
+  @keyframes floatParticle {
+    0%   { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+    10%  { opacity: 0.8; }
+    90%  { opacity: 0.5; }
+    100% { transform: translateY(-10vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* ===== HERO SECTION ===== */
+  #hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 60% 40%, #1e3a6e 0%, #0a1628 60%, #000 100%);
+  }
+  .hero-bg::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 80px, rgba(201,150,42,0.04) 80px, rgba(201,150,42,0.04) 81px),
+      repeating-linear-gradient(90deg, transparent, transparent 80px, rgba(201,150,42,0.04) 80px, rgba(201,150,42,0.04) 81px);
+  }
+
+  /* Rays */
+  .rays {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    pointer-events: none;
+  }
+  .ray {
+    position: absolute;
+    width: 2px;
+    height: 70vh;
+    background: linear-gradient(to top, transparent, rgba(201,150,42,0.15), transparent);
+    transform-origin: bottom center;
+    animation: rayRotate 20s linear infinite;
+  }
+  @keyframes rayRotate {
+    from { transform: rotate(var(--angle)); }
+    to   { transform: rotate(calc(var(--angle) + 360deg)); }
+  }
+
+  .hero-content {
+    position: relative; z-index: 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    max-width: 1200px;
+    width: 90%;
+    align-items: center;
+  }
+
+  .hero-text {
+    animation: slideInRight 1.2s cubic-bezier(0.22,1,0.36,1) forwards;
+    opacity: 0;
+  }
+  @keyframes slideInRight {
+    from { transform: translateX(80px); opacity: 0; }
+    to   { transform: translateX(0); opacity: 1; }
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: linear-gradient(135deg, rgba(201,150,42,0.2), rgba(201,150,42,0.05));
+    border: 1px solid rgba(201,150,42,0.4);
+    padding: 8px 20px; border-radius: 40px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem; letter-spacing: 0.3em;
+    color: var(--gold-light);
+    margin-bottom: 28px;
+    animation: pulseGlow 2s ease-in-out infinite;
+  }
+  @keyframes pulseGlow {
+    0%,100% { box-shadow: 0 0 10px rgba(201,150,42,0.2); }
+    50%      { box-shadow: 0 0 25px rgba(201,150,42,0.5); }
+  }
+
+  .hero-title {
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 900;
+    line-height: 1.1;
+    background: linear-gradient(135deg, var(--gold-bright) 0%, var(--gold) 40%, var(--gold-light) 70%, #fff8d0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .hero-title::after {
+    content: attr(data-text);
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, var(--gold-bright), var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: blur(20px);
+    opacity: 0.4;
+  }
+
+  .hero-subtitle {
+    font-family: 'Cinzel', serif;
+    font-size: 1.1rem;
+    color: var(--gold-light);
+    letter-spacing: 0.2em;
+    margin-bottom: 24px;
+  }
+
+  .hero-desc {
+    font-size: 1.1rem;
+    line-height: 1.9;
+    color: rgba(245,230,200,0.85);
+    margin-bottom: 40px;
+  }
+
+  .btn-group { display: flex; gap: 16px; flex-wrap: wrap; }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: linear-gradient(135deg, var(--gold) 0%, #8b6914 50%, var(--gold) 100%);
+    background-size: 200% 200%;
+    color: #0a0a0a;
+    font-family: 'Cinzel', serif;
+    font-weight: 700; font-size: 0.9rem;
+    padding: 14px 32px; border-radius: 4px;
+    text-decoration: none;
+    border: none; cursor: pointer;
+    animation: shimmerBtn 3s ease infinite;
+    box-shadow: 0 4px 20px rgba(201,150,42,0.4), inset 0 1px 0 rgba(255,255,200,0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+    letter-spacing: 0.1em;
+  }
+  .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(201,150,42,0.6);
+  }
+  @keyframes shimmerBtn {
+    0%,100% { background-position: 0% 50%; }
+    50%      { background-position: 100% 50%; }
+  }
+
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: transparent;
+    color: var(--gold-light);
+    font-family: 'Cinzel', serif;
+    font-weight: 600; font-size: 0.9rem;
+    padding: 13px 32px; border-radius: 4px;
+    border: 1px solid rgba(201,150,42,0.5);
+    cursor: pointer; text-decoration: none;
+    letter-spacing: 0.1em;
+    transition: all 0.3s;
+  }
+  .btn-secondary:hover {
+    background: rgba(201,150,42,0.1);
+    border-color: var(--gold-light);
+    box-shadow: 0 0 20px rgba(201,150,42,0.2);
+  }
+
+  /* Hero image */
+  .hero-image-wrap {
+    position: relative;
+    animation: floatImage 6s ease-in-out infinite, fadeInLeft 1.2s 0.3s cubic-bezier(0.22,1,0.36,1) forwards;
+    opacity: 0;
+    display: flex; justify-content: center;
+  }
+  @keyframes floatImage {
+    0%,100% { transform: translateY(0px); }
+    50%      { transform: translateY(-18px); }
+  }
+  @keyframes fadeInLeft {
+    from { transform: translateX(-60px); opacity: 0; }
+    to   { transform: translateX(0); opacity: 1; }
+  }
+
+  .hero-img-frame {
+    position: relative; display: inline-block;
+  }
+  .hero-img-frame::before {
+    content: '';
+    position: absolute; inset: -3px;
+    background: linear-gradient(135deg, var(--gold-bright), var(--blue-mid), var(--gold), var(--crimson));
+    border-radius: 12px;
+    animation: borderRotate 4s linear infinite;
+    z-index: -1;
+  }
+  @keyframes borderRotate {
+    from { filter: hue-rotate(0deg); }
+    to   { filter: hue-rotate(360deg); }
+  }
+
+  .hero-img {
+    width: 100%; max-width: 420px;
+    border-radius: 10px;
+    display: block;
+    position: relative; z-index: 1;
+    filter: drop-shadow(0 20px 60px rgba(0,0,0,0.8));
+  }
+
+  .hero-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    pointer-events: none;
+    animation: orbPulse 4s ease-in-out infinite alternate;
+  }
+  @keyframes orbPulse {
+    from { opacity: 0.3; transform: scale(0.9); }
+    to   { opacity: 0.6; transform: scale(1.1); }
+  }
+
+  /* ===== DIVIDER ===== */
+  .divider {
+    display: flex; align-items: center; justify-content: center;
+    gap: 20px; padding: 40px 0; position: relative; z-index: 1;
+  }
+  .divider-line {
+    flex: 1; max-width: 300px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .divider-icon {
+    color: var(--gold); font-size: 1.5rem;
+    animation: spinSlow 8s linear infinite;
+  }
+  @keyframes spinSlow { to { transform: rotate(360deg); } }
+
+  /* ===== GALLERY SECTION ===== */
+  #gallery {
+    position: relative; z-index: 1;
+    padding: 80px 40px;
+  }
+
+  .section-header {
+    text-align: center; margin-bottom: 60px;
+  }
+  .section-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem; letter-spacing: 0.4em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    display: block;
+  }
+  .section-title {
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    background: linear-gradient(135deg, var(--gold-bright), var(--gold-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* MASONRY */
+  .gallery-masonry {
+    max-width: 1100px; margin: 0 auto;
+    columns: 3; column-gap: 24px;
+  }
+  .gallery-item {
+    break-inside: avoid;
+    margin-bottom: 24px;
+    position: relative; overflow: hidden;
+    border-radius: 8px;
+    cursor: pointer;
+    transform: translateY(60px); opacity: 0;
+    transition: transform 0.7s cubic-bezier(0.22,1,0.36,1), opacity 0.7s;
+    border: 1px solid rgba(201,150,42,0.15);
+  }
+  .gallery-item.in-view {
+    transform: translateY(0); opacity: 1;
+  }
+  .gallery-item::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(201,150,42,0.15), rgba(26,48,96,0.3));
+    opacity: 0;
+    transition: opacity 0.4s;
+    z-index: 1;
+  }
+  .gallery-item:hover::before { opacity: 1; }
+  .gallery-item:hover img {
+    transform: scale(1.06);
+    filter: brightness(1.1) saturate(1.2);
+  }
+  .gallery-item img {
+    width: 100%; display: block;
+    border-radius: 8px;
+    transition: transform 0.6s cubic-bezier(0.22,1,0.36,1), filter 0.4s;
+  }
+  .gallery-overlay {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%);
+    padding: 24px 16px 16px;
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.22,1,0.36,1);
+    z-index: 2;
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    color: var(--gold-light);
+    letter-spacing: 0.15em;
+    text-align: center;
+  }
+  .gallery-item:hover .gallery-overlay { transform: translateY(0); }
+
+  /* ===== FEATURES SECTION ===== */
+  #features {
+    position: relative; z-index: 1;
+    padding: 80px 40px;
+    background: linear-gradient(180deg, transparent, rgba(10,22,40,0.8), transparent);
+  }
+
+  .features-grid {
+    max-width: 1100px; margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 28px;
+  }
+
+  .feature-card {
+    background: linear-gradient(135deg, rgba(26,48,96,0.4), rgba(10,22,40,0.6));
+    border: 1px solid rgba(201,150,42,0.2);
+    border-radius: 10px;
+    padding: 32px 28px;
+    text-align: center;
+    position: relative; overflow: hidden;
+    transform: translateY(40px); opacity: 0;
+    transition: transform 0.6s, opacity 0.6s, box-shadow 0.3s, border-color 0.3s;
+    backdrop-filter: blur(10px);
+  }
+  .feature-card.in-view {
+    transform: translateY(0); opacity: 1;
+  }
+  .feature-card:hover {
+    border-color: rgba(201,150,42,0.5);
+    box-shadow: 0 8px 40px rgba(201,150,42,0.15), 0 0 0 1px rgba(201,150,42,0.1);
+  }
+  .feature-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    transform: scaleX(0);
+    transition: transform 0.4s;
+  }
+  .feature-card:hover::before { transform: scaleX(1); }
+
+  .feature-icon {
+    font-size: 2.5rem; margin-bottom: 16px;
+    display: block;
+    animation: iconBounce 3s ease-in-out infinite;
+  }
+  @keyframes iconBounce {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-6px); }
+  }
+  .feature-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem; font-weight: 700;
+    color: var(--gold-light);
+    margin-bottom: 12px;
+    letter-spacing: 0.1em;
+  }
+  .feature-desc {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: rgba(245,230,200,0.75);
+  }
+
+  /* ===== STATS ===== */
+  #stats {
+    position: relative; z-index: 1;
+    padding: 80px 40px;
+  }
+  .stats-row {
+    max-width: 900px; margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+  }
+  .stat-item {
+    text-align: center;
+    padding: 40px 20px;
+    border-right: 1px solid rgba(201,150,42,0.15);
+    transform: scale(0.8); opacity: 0;
+    transition: transform 0.6s, opacity 0.6s;
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-item.in-view { transform: scale(1); opacity: 1; }
+  .stat-num {
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: clamp(2rem, 4vw, 3rem);
+    background: linear-gradient(135deg, var(--gold-bright), var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: block;
+  }
+  .stat-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem; letter-spacing: 0.2em;
+    color: rgba(245,230,200,0.6);
+    margin-top: 8px;
+  }
+
+  /* ===== CTA ===== */
+  #cta {
+    position: relative; z-index: 1;
+    padding: 100px 40px;
+    text-align: center;
+  }
+  .cta-inner {
+    max-width: 700px; margin: 0 auto;
+    background: linear-gradient(135deg, rgba(26,48,96,0.5), rgba(10,22,40,0.8));
+    border: 1px solid rgba(201,150,42,0.3);
+    border-radius: 16px;
+    padding: 60px 40px;
+    position: relative; overflow: hidden;
+  }
+  .cta-inner::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(201,150,42,0.1) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cta-title {
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    color: var(--gold-light);
+    margin-bottom: 16px;
+  }
+  .cta-desc {
+    font-size: 1.05rem;
+    color: rgba(245,230,200,0.75);
+    margin-bottom: 32px;
+    line-height: 1.8;
+  }
+  .phone-num {
+    font-family: 'Cinzel', serif;
+    font-size: 1.5rem; letter-spacing: 0.15em;
+    color: var(--gold-bright);
+    display: inline-block;
+    padding: 12px 32px;
+    border: 1px solid rgba(201,150,42,0.4);
+    border-radius: 6px;
+    margin-bottom: 32px;
+    animation: phoneGlow 2s ease-in-out infinite;
+    direction: ltr;
+  }
+  @keyframes phoneGlow {
+    0%,100% { box-shadow: 0 0 10px rgba(201,150,42,0.2); }
+    50%      { box-shadow: 0 0 30px rgba(201,150,42,0.5), 0 0 60px rgba(201,150,42,0.2); }
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    position: relative; z-index: 1;
+    border-top: 1px solid rgba(201,150,42,0.15);
+    padding: 40px;
+    text-align: center;
+  }
+  .footer-logo {
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: 1.5rem;
+    background: linear-gradient(135deg, var(--gold-bright), var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 12px;
+  }
+  .footer-copy {
+    font-size: 0.8rem;
+    color: rgba(245,230,200,0.35);
+    letter-spacing: 0.15em;
+  }
+
+  /* ===== LIGHTBOX ===== */
+  #lightbox {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.95);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1000;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.4s;
+  }
+  #lightbox.open { opacity: 1; pointer-events: all; }
+  #lightbox img {
+    max-width: 90vw; max-height: 90vh;
+    border-radius: 10px;
+    border: 1px solid rgba(201,150,42,0.3);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+    transform: scale(0.85);
+    transition: transform 0.4s cubic-bezier(0.22,1,0.36,1);
+  }
+  #lightbox.open img { transform: scale(1); }
+  #lightbox-close {
+    position: absolute; top: 24px; right: 32px;
+    color: var(--gold-light); font-size: 2rem;
+    cursor: pointer; background: none; border: none;
+    font-family: sans-serif;
+    transition: transform 0.2s, color 0.2s;
+  }
+  #lightbox-close:hover { transform: rotate(90deg); color: var(--gold-bright); }
+
+  /* ===== NAV ===== */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 20px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: linear-gradient(180deg, rgba(10,22,40,0.95) 0%, transparent 100%);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(201,150,42,0.1);
+    transition: padding 0.3s;
+  }
+  nav.scrolled {
+    padding: 14px 40px;
+    background: rgba(10,22,40,0.98);
+    border-bottom-color: rgba(201,150,42,0.2);
+  }
+  .nav-logo {
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: 1.2rem;
+    background: linear-gradient(135deg, var(--gold-bright), var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 0.1em;
+  }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a {
+    color: rgba(245,230,200,0.7);
+    text-decoration: none;
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--gold-light); }
+
+  /* ===== SCROLLBAR ===== */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--blue-deep); }
+  ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+
+  /* ===== BASE RESPONSIVE ===== */
+  @media (max-width: 768px) {
+    .hero-content { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+    .hero-image-wrap { order: -1; }
+    .gallery-masonry { columns: 2; }
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    nav { padding: 16px 20px; }
+    .nav-links { display: none; }
+  }
+
+  /* ===== MOBILE NAV BTNS ===== */
+  .mobile-nav-btns { display: none; gap: 8px; }
+  .mob-btn {
+    background: rgba(201,150,42,0.15);
+    border: 1px solid rgba(201,150,42,0.3);
+    color: var(--gold-light); font-size: 1.2rem;
+    width: 38px; height: 38px; border-radius: 6px;
+    cursor: pointer; transition: background 0.2s;
+  }
+  .mob-btn:hover { background: rgba(201,150,42,0.3); }
+  @media (max-width: 768px) {
+    .mobile-nav-btns { display: flex; }
+  }
+
+  /* ===== CTA BIG BTNS ===== */
+  .cta-btns-row {
+    display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;
+    margin-top: 10px;
+  }
+  .cta-big-btn { font-size: 1.05rem !important; padding: 16px 36px !important; }
+
+  /* ===== PAGE OVERLAY ===== */
+  .page-overlay {
+    position: fixed; inset: 0;
+    z-index: 2000;
+    display: flex; align-items: flex-start; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.4s;
+    overflow-y: auto;
+    padding: 20px;
+  }
+  .page-overlay.open {
+    opacity: 1; pointer-events: all;
+  }
+  .page-overlay-bg {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.92);
+    backdrop-filter: blur(12px);
+  }
+  .page-modal {
+    position: relative; z-index: 1;
+    width: 100%; max-width: 760px;
+    background: linear-gradient(145deg, #0d1f3c 0%, #0a1628 60%, #060f1e 100%);
+    border: 1px solid rgba(201,150,42,0.25);
+    border-radius: 16px;
+    padding: 50px 48px 60px;
+    margin: auto;
+    transform: translateY(40px) scale(0.97);
+    transition: transform 0.5s cubic-bezier(0.22,1,0.36,1);
+    box-shadow: 0 40px 100px rgba(0,0,0,0.8), 0 0 0 1px rgba(201,150,42,0.1);
+  }
+  .page-overlay.open .page-modal {
+    transform: translateY(0) scale(1);
+  }
+  .page-modal-close {
+    position: absolute; top: 20px; left: 20px;
+    background: rgba(201,150,42,0.1); border: 1px solid rgba(201,150,42,0.2);
+    color: var(--gold-light); width: 36px; height: 36px;
+    border-radius: 50%; font-size: 1rem;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .page-modal-close:hover {
+    background: rgba(201,150,42,0.25); transform: rotate(90deg);
+  }
+  .page-modal-top-deco {
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold), var(--gold-bright), var(--gold), transparent);
+    border-radius: 16px 16px 0 0;
+  }
+  .page-modal-header {
+    text-align: center; margin-bottom: 40px;
+  }
+  .page-modal-icon {
+    font-size: 3.5rem; margin-bottom: 16px; display: block;
+    animation: iconFloat 3s ease-in-out infinite;
+  }
+  @keyframes iconFloat {
+    0%,100%{ transform: translateY(0) rotate(-3deg); }
+    50%    { transform: translateY(-8px) rotate(3deg); }
+  }
+  .page-modal-title {
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    background: linear-gradient(135deg, var(--gold-bright), var(--gold-light));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+  }
+  .page-modal-sub {
+    font-family: 'Cinzel', serif;
+    font-size: 0.78rem; letter-spacing: 0.25em;
+    color: rgba(245,230,200,0.5);
+  }
+
+  /* ===== ORDER PAGE ===== */
+  .order-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px; margin-bottom: 28px;
+  }
+  .order-card {
+    background: linear-gradient(135deg, rgba(26,48,96,0.5), rgba(10,22,40,0.7));
+    border: 1px solid rgba(201,150,42,0.15);
+    border-radius: 10px; padding: 20px;
+    cursor: pointer; text-align: center;
+    transition: all 0.3s;
+    position: relative; overflow: hidden;
+  }
+  .order-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(201,150,42,0.12), transparent 70%);
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .order-card:hover::before, .order-card.selected::before { opacity: 1; }
+  .order-card:hover, .order-card.selected {
+    border-color: var(--gold);
+    box-shadow: 0 0 20px rgba(201,150,42,0.2);
+    transform: translateY(-3px);
+  }
+  .order-card.selected { border-color: var(--gold-bright); }
+  .order-card-icon { font-size: 2rem; display: block; margin-bottom: 8px; }
+  .order-card-name {
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem; font-weight: 700;
+    color: var(--gold-light); margin-bottom: 6px;
+  }
+  .order-card-desc {
+    font-size: 0.8rem;
+    color: rgba(245,230,200,0.6);
+    line-height: 1.5;
+  }
+  .order-card .check {
+    position: absolute; top: 10px; right: 10px;
+    width: 20px; height: 20px;
+    background: var(--gold);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; color: #000;
+    opacity: 0; transform: scale(0);
+    transition: all 0.25s;
+  }
+  .order-card.selected .check { opacity: 1; transform: scale(1); }
+
+  .form-group { margin-bottom: 20px; }
+  .form-label {
+    display: block;
+    font-family: 'Cinzel', serif;
+    font-size: 0.78rem; letter-spacing: 0.15em;
+    color: var(--gold-light); margin-bottom: 8px;
+  }
+  .form-input, .form-select, .form-textarea {
+    width: 100%;
+    background: rgba(10,22,40,0.8);
+    border: 1px solid rgba(201,150,42,0.2);
+    border-radius: 6px; padding: 12px 16px;
+    color: var(--cream);
+    font-family: 'Amiri', serif; font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    direction: rtl;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 15px rgba(201,150,42,0.15);
+  }
+  .form-select option { background: #0d1f3c; }
+  .form-textarea { resize: vertical; min-height: 100px; }
+
+  .order-amounts {
+    display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px;
+  }
+  .amount-chip {
+    padding: 8px 18px;
+    background: rgba(26,48,96,0.4);
+    border: 1px solid rgba(201,150,42,0.2);
+    border-radius: 20px; font-size: 0.85rem;
+    color: rgba(245,230,200,0.7);
+    cursor: pointer; transition: all 0.25s;
+    font-family: 'Cinzel', serif;
+  }
+  .amount-chip:hover, .amount-chip.active {
+    background: rgba(201,150,42,0.15);
+    border-color: var(--gold);
+    color: var(--gold-light);
+  }
+
+  .submit-btn {
+    width: 100%; padding: 16px;
+    background: linear-gradient(135deg, var(--gold) 0%, #6b4e10 50%, var(--gold) 100%);
+    background-size: 200%;
+    border: none; border-radius: 8px;
+    color: #0a0a0a; font-family: 'Cinzel', serif;
+    font-weight: 700; font-size: 1.05rem;
+    letter-spacing: 0.1em; cursor: pointer;
+    animation: shimmerBtn 3s ease infinite;
+    box-shadow: 0 6px 24px rgba(201,150,42,0.35);
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-top: 8px;
+  }
+  .submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 34px rgba(201,150,42,0.5);
+  }
+  .submit-success {
+    display: none;
+    text-align: center; padding: 30px;
+    animation: fadeInUp 0.5s ease;
+  }
+  @keyframes fadeInUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to   { transform: translateY(0); opacity: 1; }
+  }
+  .submit-success-icon { font-size: 4rem; display: block; margin-bottom: 16px; }
+  .submit-success-text {
+    font-family: 'Cinzel', serif;
+    color: var(--gold-light); font-size: 1.1rem; margin-bottom: 8px;
+  }
+  .submit-success-sub {
+    color: rgba(245,230,200,0.6); font-size: 0.9rem;
+  }
+
+  /* ===== CONTACT PAGE ===== */
+  .contact-options {
+    display: flex; flex-direction: column; gap: 20px;
+  }
+  .contact-card {
+    display: flex; align-items: center; gap: 24px;
+    background: linear-gradient(135deg, rgba(26,48,96,0.4), rgba(10,22,40,0.6));
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px; padding: 28px 32px;
+    text-decoration: none;
+    transition: all 0.35s;
+    position: relative; overflow: hidden;
+  }
+  .contact-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .contact-card.telegram::before {
+    background: radial-gradient(ellipse at 30% 50%, rgba(41,182,246,0.12), transparent 70%);
+  }
+  .contact-card.whatsapp::before {
+    background: radial-gradient(ellipse at 30% 50%, rgba(37,211,102,0.12), transparent 70%);
+  }
+  .contact-card:hover::before { opacity: 1; }
+  .contact-card.telegram:hover {
+    border-color: rgba(41,182,246,0.5);
+    box-shadow: 0 8px 40px rgba(41,182,246,0.15);
+    transform: translateX(-6px);
+  }
+  .contact-card.whatsapp:hover {
+    border-color: rgba(37,211,102,0.5);
+    box-shadow: 0 8px 40px rgba(37,211,102,0.15);
+    transform: translateX(-6px);
+  }
+  .contact-logo {
+    width: 64px; height: 64px; border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem; flex-shrink: 0;
+    transition: transform 0.3s;
+  }
+  .contact-card:hover .contact-logo { transform: scale(1.1) rotate(-5deg); }
+  .contact-card.telegram .contact-logo {
+    background: linear-gradient(135deg, #1e88e5, #29b6f6);
+    box-shadow: 0 8px 20px rgba(41,182,246,0.3);
+  }
+  .contact-card.whatsapp .contact-logo {
+    background: linear-gradient(135deg, #1b5e20, #25d366);
+    box-shadow: 0 8px 20px rgba(37,211,102,0.3);
+  }
+  .contact-info { flex: 1; }
+  .contact-platform {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem; letter-spacing: 0.3em;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+  .contact-card.telegram .contact-platform { color: #29b6f6; }
+  .contact-card.whatsapp .contact-platform { color: #25d366; }
+  .contact-name {
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: 1.3rem;
+    color: var(--cream); margin-bottom: 6px;
+  }
+  .contact-desc {
+    font-size: 0.88rem;
+    color: rgba(245,230,200,0.55);
+    line-height: 1.5;
+  }
+  .contact-arrow {
+    font-size: 1.5rem;
+    color: rgba(245,230,200,0.25);
+    transition: all 0.3s;
+  }
+  .contact-card.telegram:hover .contact-arrow { color: #29b6f6; transform: translateX(-6px); }
+  .contact-card.whatsapp:hover .contact-arrow { color: #25d366; transform: translateX(-6px); }
+
+  .contact-divider {
+    display: flex; align-items: center; gap: 16px;
+    margin: 4px 0;
+  }
+  .contact-divider-line {
+    flex: 1; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,150,42,0.2), transparent);
+  }
+  .contact-divider-txt {
+    font-family: 'Cinzel', serif;
+    font-size: 0.72rem; letter-spacing: 0.2em;
+    color: rgba(245,230,200,0.3);
+  }
+
+  /* ===== FLOATING CONTACT BTNS ===== */
+  .floating-btns {
+    position: fixed; bottom: 28px; left: 28px;
+    display: flex; flex-direction: column; gap: 14px;
+    z-index: 500;
+  }
+  .float-btn {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; text-decoration: none;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    transition: all 0.3s; border: none; cursor: pointer;
+    animation: floatBtnPop 0.5s cubic-bezier(0.22,1,0.36,1) backwards;
+    position: relative;
+  }
+  .float-btn::after {
+    content: attr(data-label);
+    position: absolute; left: calc(100% + 12px);
+    background: rgba(0,0,0,0.85);
+    color: #fff; font-family: 'Amiri', serif;
+    font-size: 0.85rem; white-space: nowrap;
+    padding: 6px 14px; border-radius: 6px;
+    opacity: 0; transform: translateX(10px);
+    transition: all 0.25s; pointer-events: none;
+  }
+  .float-btn:hover::after { opacity: 1; transform: translateX(0); }
+  .float-btn:hover { transform: scale(1.12); }
+  .float-btn.tg {
+    background: linear-gradient(135deg, #1e88e5, #29b6f6);
+    animation-delay: 0.1s;
+  }
+  .float-btn.wa {
+    background: linear-gradient(135deg, #128c7e, #25d366);
+    animation-delay: 0.2s;
+  }
+  @keyframes floatBtnPop {
+    from { transform: scale(0); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
+
+  @media (max-width: 768px) {
+    .order-grid { grid-template-columns: 1fr 1fr; }
+    .page-modal { padding: 40px 24px 50px; }
+    .contact-card { padding: 20px; flex-direction: column; text-align: center; }
+    .contact-arrow { display: none; }
+    .floating-btns { bottom: 20px; left: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Custom Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-trail" id="cursorTrail"></div>
+
+<!-- Particles -->
+<div id="particles"></div>
+
+<!-- Lightbox -->
+<div id="lightbox">
+  <button id="lightbox-close">✕</button>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<!-- Nav -->
+<nav id="nav">
+  <div class="nav-logo">⚜ Karena-MLLB</div>
+  <ul class="nav-links">
+    <li><a href="#hero">الرئيسية</a></li>
+    <li><a href="#gallery">المعرض</a></li>
+    <li><a href="#features">المميزات</a></li>
+    <li><a href="javascript:void(0)" onclick="openPage('order')">🛒 اطلب الآن</a></li>
+    <li><a href="javascript:void(0)" onclick="openPage('contact')">📲 تواصل معنا</a></li>
+  </ul>
+  <!-- Mobile Nav Buttons -->
+  <div class="mobile-nav-btns">
+    <button class="mob-btn" onclick="openPage('order')">🛒</button>
+    <button class="mob-btn" onclick="openPage('contact')">📲</button>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section id="hero">
+  <div class="hero-bg"></div>
+
+  <!-- Rays -->
+  <div class="rays" id="rays"></div>
+
+  <!-- Orbs -->
+  <div class="hero-orb" style="width:500px;height:500px;background:rgba(34,85,170,0.3);top:-100px;right:-100px;"></div>
+  <div class="hero-orb" style="width:400px;height:400px;background:rgba(139,26,26,0.2);bottom:-80px;left:-80px;animation-delay:-2s;"></div>
+  <div class="hero-orb" style="width:300px;height:300px;background:rgba(201,150,42,0.15);bottom:30%;left:20%;animation-delay:-4s;"></div>
+
+  <div class="hero-content">
+    <div class="hero-image-wrap">
+      <div class="hero-img-frame">
+        <img src="c:\Users\Asus\Downloads\ChatGPT Image 26 أبريل 2026، 07_32_16 م.png" alt="Karena MLLB" class="hero-img">
+      </div>
+    </div>
+    <div class="hero-text">
+      <div class="hero-badge">
+        ✦ ملكة الميدان ✦
+      </div>
+      <h1 class="hero-title" data-text="KARENA-MLLB">KARENA-MLLB</h1>
+      <p class="hero-subtitle">⚔ القوة · الحكمة · الانتصار ⚔</p>
+      <p class="hero-desc">
+        انضم إلى إمبراطورية لا تُهزم. بناء القلاع، تحريك الجيوش، والسيطرة على عالم فاتحون العصر الذهبي. تجربة لا مثيل لها تنتظرك.
+      </p>
+      <div class="btn-group">
+        <button onclick="openPage('order')" class="btn-primary">🛒 اطلب موارد أو بوت</button>
+        <button onclick="openPage('contact')" class="btn-secondary">📲 تواصل معنا</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider">
+  <div class="divider-line"></div>
+  <span class="divider-icon">✦</span>
+  <div class="divider-line"></div>
+</div>
+
+<!-- ===== GALLERY ===== -->
+<section id="gallery">
+  <div class="section-header">
+    <span class="section-label">✦ لقطات الميدان ✦</span>
+    <h2 class="section-title">معرض الملكة</h2>
+  </div>
+  <div class="gallery-masonry">
+    <div class="gallery-item" data-label="ملكة الغروب">
+      <img src="c:\Users\Asus\Downloads\ChatGPT Image 26 أبريل 2026، 07_38_15 م.png" alt="Karena 1">
+      <div class="gallery-overlay">ملكة الغروب ✦ سيدة الميدان</div>
+    </div>
+    <div class="gallery-item" data-label="فاتحون">
+      <img src="c:\Users\Asus\Downloads\ChatGPT Image 26 أبريل 2026، 07_36_34 م.png" alt="فاتحون">
+      <div class="gallery-overlay">فاتحون العصر الذهبي ✦ سيطر على العالم</div>
+    </div>
+    <div class="gallery-item" data-label="جيش الملكة">
+      <img src="c:\Users\Asus\Downloads\ChatGPT Image 26 أبريل 2026، 07_34_37 م (1).png" alt="Karena 3">
+      <div class="gallery-overlay">إمبراطورية لا تُقهر ✦ جيوش بلا حدود</div>
+    </div>
+    
+  </div>
+</section>
+
+<div class="divider">
+  <div class="divider-line"></div>
+  <span class="divider-icon">⚜</span>
+  <div class="divider-line"></div>
+</div>
+
+<!-- ===== FEATURES ===== -->
+<section id="features">
+  <div class="section-header">
+    <span class="section-label">✦ ما تحصل عليه ✦</span>
+    <h2 class="section-title">القوة الكاملة</h2>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <span class="feature-icon">⚔️</span>
+      <h3 class="feature-title">قلاع لا تُقهر</h3>
+      <p class="feature-desc">احكم بناء إمبراطوريتك بقلاع بتصميمات دفاعية متقدمة لا يخترقها أحد</p>
+    </div>
+    <div class="feature-card" style="animation-delay:0.1s">
+      <span class="feature-icon">🤖</span>
+      <h3 class="feature-title">بوتات ذكية 24/7</h3>
+      <p class="feature-desc">بوتات تعمل لأجلك دون توقف — تجمع الموارد وتبني وتتدرب وأنت نائم</p>
+    </div>
+    <div class="feature-card" style="animation-delay:0.2s">
+      <span class="feature-icon">💰</span>
+      <h3 class="feature-title">موارد بلا حدود</h3>
+      <p class="feature-desc">احصل على كل ما تحتاجه لتطوير جيشك وتوسيع نفوذك عبر الممالك</p>
+    </div>
+    <div class="feature-card" style="animation-delay:0.3s">
+      <span class="feature-icon">⚡</span>
+      <h3 class="feature-title">سرعة تتجاوز الجميع</h3>
+      <p class="feature-desc">بناء وتدريب وتحرك بسرعة تفوق منافسيك وتضمن لك الريادة دائماً</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== STATS ===== -->
+<section id="stats">
+  <div class="divider"><div class="divider-line"></div><span class="divider-icon">♛</span><div class="divider-line"></div></div>
+  <div class="stats-row">
+    <div class="stat-item">
+      <span class="stat-num" data-target="5000">0</span>
+      <span class="stat-label">فاتح انضم</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num" data-target="24">0</span>
+      <span class="stat-label">ساعة دعم</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num" data-target="99">0</span>
+      <span class="stat-label">% رضا العملاء</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num" data-target="1">0</span>
+      <span class="stat-label">ملكة لا تُهزم</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider">
+  <div class="divider-line"></div>
+  <span class="divider-icon">✦</span>
+  <div class="divider-line"></div>
+</div>
+
+<!-- ===== CTA ===== -->
+<section id="cta">
+  <div class="cta-inner">
+    <h2 class="cta-title">🏰 ابدأ فتحك الآن</h2>
+    <p class="cta-desc">
+      تواصل مع Karena-MLLB مباشرةً وانضم إلى آلاف الفاتحين الذين يكتبون تاريخهم في فاتحون العصر الذهبي
+    </p>
+    <div class="cta-btns-row">
+      <button onclick="openPage('order')" class="btn-primary cta-big-btn">🛒 اطلب موارد أو بوتات</button>
+      <button onclick="openPage('contact')" class="btn-secondary cta-big-btn">📲 تواصل معنا</button>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-logo">⚜ KARENA-MLLB ⚜</div>
+  <p class="footer-copy">MLLB · فاتحون العصر الذهبي · كل الحقوق محفوظة</p>
+</footer>
+
+<!-- ===== ORDER PAGE ===== -->
+<div class="page-overlay" id="page-order">
+  <div class="page-overlay-bg" onclick="closePage('order')"></div>
+  <div class="page-modal">
+    <div class="page-modal-top-deco"></div>
+    <button class="page-modal-close" onclick="closePage('order')">✕</button>
+    <div class="page-modal-header">
+      <span class="page-modal-icon">⚔️</span>
+      <h2 class="page-modal-title">ارفع قوتك الآن</h2>
+      <p class="page-modal-sub">✦ موارد · بوتات · خدمات فاتحون ✦</p>
+    </div>
+
+    <div id="order-form-wrap">
+      <!-- Step 1: Choose type -->
+      <p class="form-label" style="margin-bottom:12px;">اختر نوع الطلب</p>
+      <div class="order-grid">
+        <div class="order-card" onclick="selectOrder(this,'resources')">
+          <span class="check">✓</span>
+          <span class="order-card-icon">💰</span>
+          <div class="order-card-name">موارد</div>
+          <div class="order-card-desc">ذهب · خشب · حجارة · طعام</div>
+        </div>
+        <div class="order-card" onclick="selectOrder(this,'bots')">
+          <span class="check">✓</span>
+          <span class="order-card-icon">🤖</span>
+          <div class="order-card-name">بوتات</div>
+          <div class="order-card-desc">بوت تلقائي يعمل 24/7 لأجلك</div>
+        </div>
+        <div class="order-card" onclick="selectOrder(this,'both')">
+          <span class="check">✓</span>
+          <span class="order-card-icon">⚡</span>
+          <div class="order-card-name">موارد + بوت</div>
+          <div class="order-card-desc">الباقة الكاملة لسيطرة كاملة</div>
+        </div>
+        <div class="order-card" onclick="selectOrder(this,'castle')">
+          <span class="check">✓</span>
+          <span class="order-card-icon">🏰</span>
+          <div class="order-card-name">تطوير قلعة</div>
+          <div class="order-card-desc">رفع مستوى قلعتك بشكل سريع</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">الكمية المطلوبة</label>
+        <div class="order-amounts">
+          <span class="amount-chip" onclick="selectAmount(this)">صغيرة</span>
+          <span class="amount-chip" onclick="selectAmount(this)">متوسطة</span>
+          <span class="amount-chip" onclick="selectAmount(this)">كبيرة</span>
+          <span class="amount-chip" onclick="selectAmount(this)">VIP ملكي</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">اسمك في اللعبة</label>
+        <input class="form-input" type="text" placeholder="اكتب اسمك هنا..." id="order-name">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">اكتب رقم تلفونك (كمية مطلوبة)</label>
+        <textarea class="form-textarea" placeholder="أي تفاصيل إضافية عن طلبك..." id="order-details"></textarea>
+      </div>
+
+      <button class="submit-btn" onclick="submitOrder()">
+        ⚔ أرسل الطلب عبر واتساب
+      </button>
+    </div>
+
+    <div class="submit-success" id="order-success">
+      <span class="submit-success-icon">🎉</span>
+      <div class="submit-success-text">تم إرسال طلبك!</div>
+      <div class="submit-success-sub">سيتم فتح واتساب لإتمام الطلب مع Karena-MLLB</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CONTACT PAGE ===== -->
+<div class="page-overlay" id="page-contact">
+  <div class="page-overlay-bg" onclick="closePage('contact')"></div>
+  <div class="page-modal">
+    <div class="page-modal-top-deco"></div>
+    <button class="page-modal-close" onclick="closePage('contact')">✕</button>
+    <div class="page-modal-header">
+      <span class="page-modal-icon">👑</span>
+      <h2 class="page-modal-title">تواصل معنا</h2>
+      <p class="page-modal-sub">✦ نحن هنا لك في أي وقت ✦</p>
+    </div>
+    <div class="contact-options">
+      <a href="https://t.me/KARENA985" target="_blank" class="contact-card telegram">
+        <div class="contact-logo">✈️</div>
+        <div class="contact-info">
+          <div class="contact-platform">Telegram</div>
+          <div class="contact-name">@KARENA985</div>
+          <div class="contact-desc">تواصل معنا مباشرة على تيليجرام لأسرع رد ودعم فوري</div>
+        </div>
+        <div class="contact-arrow">←</div>
+      </a>
+
+      <div class="contact-divider">
+        <div class="contact-divider-line"></div>
+        <span class="contact-divider-txt">أو</span>
+        <div class="contact-divider-line"></div>
+      </div>
+
+      <a href="https://wa.me/201018351663" target="_blank" class="contact-card whatsapp">
+        <div class="contact-logo">💬</div>
+        <div class="contact-info">
+          <div class="contact-platform">WhatsApp</div>
+          <div class="contact-name">+201018351663</div>
+          <div class="contact-desc">راسلنا على واتساب لطلب الخدمات أو الاستفسار عن أي شيء</div>
+        </div>
+        <div class="contact-arrow">←</div>
+      </a>
+
+      <div style="text-align:center; margin-top:20px; padding:20px; background:rgba(201,150,42,0.05); border:1px solid rgba(201,150,42,0.1); border-radius:10px;">
+        <p style="font-family:'Cinzel',serif; font-size:0.78rem; letter-spacing:0.15em; color:rgba(245,230,200,0.45); margin-bottom:8px;">ساعات التواصل</p>
+        <p style="font-family:'Cinzel Decorative',cursive; font-size:1rem; color:var(--gold-light);">10 / 10 — دائماً هنا</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== FLOATING BTNS ===== -->
+<div class="floating-btns">
+  <a href="https://t.me/KARENA985" target="_blank" class="float-btn tg" data-label="تيليجرام">✈️</a>
+  <a href="https://wa.me/201018351663" target="_blank" class="float-btn wa" data-label="واتساب">💬</a>
+</div>
+
+<script>
+// ===== CURSOR =====
+const cursor = document.getElementById('cursor');
+const trail = document.getElementById('cursorTrail');
+let mx = 0, my = 0, tx = 0, ty = 0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.transform = `translate(${mx - 9}px, ${my - 9}px)`;
+});
+function animTrail() {
+  tx += (mx - tx) * 0.2;
+  ty += (my - ty) * 0.2;
+  trail.style.transform = `translate(${tx - 3}px, ${ty - 3}px)`;
+  requestAnimationFrame(animTrail);
+}
+animTrail();
+
+// ===== PARTICLES =====
+const pContainer = document.getElementById('particles');
+for (let i = 0; i < 50; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  const size = Math.random() * 4 + 1;
+  const colors = ['rgba(201,150,42,0.7)','rgba(240,192,64,0.5)','rgba(255,224,102,0.4)','rgba(34,85,170,0.5)'];
+  p.style.cssText = `
+    width:${size}px; height:${size}px;
+    left:${Math.random()*100}%;
+    background:${colors[Math.floor(Math.random()*colors.length)]};
+    animation-duration:${8+Math.random()*15}s;
+    animation-delay:${Math.random()*15}s;
+  `;
+  pContainer.appendChild(p);
+}
+
+// ===== RAYS =====
+const raysEl = document.getElementById('rays');
+for (let i = 0; i < 16; i++) {
+  const r = document.createElement('div');
+  r.className = 'ray';
+  const angle = (360 / 16) * i;
+  r.style.setProperty('--angle', `${angle}deg`);
+  r.style.transform = `rotate(${angle}deg)`;
+  r.style.animationDuration = `${15 + i * 0.5}s`;
+  raysEl.appendChild(r);
+}
+
+// ===== NAV SCROLL =====
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// ===== INTERSECTION OBSERVER (scroll reveal) =====
+const io = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('in-view'), i * 80);
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.gallery-item, .feature-card, .stat-item').forEach(el => io.observe(el));
+
+// ===== COUNT-UP =====
+const countIO = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const el = entry.target.querySelector('.stat-num');
+      const target = parseInt(el.dataset.target);
+      let current = 0;
+      const step = Math.ceil(target / 60);
+      const timer = setInterval(() => {
+        current = Math.min(current + step, target);
+        el.textContent = current.toLocaleString();
+        if (current >= target) clearInterval(timer);
+      }, 20);
+      countIO.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('.stat-item').forEach(el => countIO.observe(el));
+
+// ===== LIGHTBOX =====
+const lb = document.getElementById('lightbox');
+const lbImg = document.getElementById('lightbox-img');
+document.querySelectorAll('.gallery-item img').forEach(img => {
+  img.addEventListener('click', () => {
+    lbImg.src = img.src;
+    lb.classList.add('open');
+  });
+});
+document.getElementById('lightbox-close').addEventListener('click', () => lb.classList.remove('open'));
+lb.addEventListener('click', e => { if (e.target === lb) lb.classList.remove('open'); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { lb.classList.remove('open'); closePage('order'); closePage('contact'); }
+});
+
+// ===== PARALLAX =====
+window.addEventListener('scroll', () => {
+  const y = window.scrollY;
+  const hw = document.querySelector('.hero-image-wrap');
+  if (hw) hw.style.transform = `translateY(${y * 0.08}px)`;
+});
+
+// ===== PAGE SYSTEM =====
+function openPage(name) {
+  document.getElementById('page-' + name).classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closePage(name) {
+  document.getElementById('page-' + name).classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ===== ORDER FORM =====
+let selectedType = '';
+let selectedAmount = '';
+
+function selectOrder(card, type) {
+  document.querySelectorAll('.order-card').forEach(c => c.classList.remove('selected'));
+  card.classList.add('selected');
+  selectedType = type;
+}
+
+function selectAmount(chip) {
+  document.querySelectorAll('.amount-chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  selectedAmount = chip.textContent;
+}
+
+function submitOrder() {
+  const name = document.getElementById('order-name').value.trim();
+  const details = document.getElementById('order-details').value.trim();
+  if (!selectedType) { alert('اختر نوع الطلب أولاً'); return; }
+  if (!name) { alert('اكتب اسمك في اللعبة'); return; }
+
+  const typeMap = { resources: 'موارد', bots: 'بوتات', both: 'موارد + بوت', castle: 'تطوير قلعة' };
+  let msg = `🏰 طلب جديد - Karena-MLLB\n`;
+  msg += `━━━━━━━━━━━━━━\n`;
+  msg += `⚔️ النوع: ${typeMap[selectedType]}\n`;
+  if (selectedAmount) msg += `📦 الكمية: ${selectedAmount}\n`;
+  msg += `👤 الاسم: ${name}\n`;
+  if (details) msg += `📝 التفاصيل: ${details}\n`;
+  msg += `━━━━━━━━━━━━━━`;
+
+  document.getElementById('order-form-wrap').style.display = 'none';
+  document.getElementById('order-success').style.display = 'block';
+
+  setTimeout(() => {
+    window.open(`https://wa.me/201018351663?text=${encodeURIComponent(msg)}`, '_blank');
+  }, 800);
+
+  setTimeout(() => {
+    document.getElementById('order-form-wrap').style.display = 'block';
+    document.getElementById('order-success').style.display = 'none';
+    document.querySelectorAll('.order-card').forEach(c => c.classList.remove('selected'));
+    document.querySelectorAll('.amount-chip').forEach(c => c.classList.remove('active'));
+    document.getElementById('order-name').value = '';
+    document.getElementById('order-details').value = '';
+    selectedType = ''; selectedAmount = '';
+  }, 5000);
+}
+</script>
+</body>
+</html>
